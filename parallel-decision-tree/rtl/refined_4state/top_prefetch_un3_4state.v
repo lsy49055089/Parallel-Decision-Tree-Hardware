@@ -61,6 +61,7 @@ module top_prefetch_un3_4state #(
     wire signed [(2*WORD_LEN)+ATTR_NUM_ENC:0] node3_score;
 
     reg node1_direction_q;
+    reg [CLASS_ENC-1:0] node1_class_q;
     reg [CLASS_ENC-1:0] node2_class_q, node3_class_q;
     reg [ND_NUM_ENC-1:0] node2_next_q, node3_next_q;
 
@@ -145,6 +146,7 @@ module top_prefetch_un3_4state #(
             result_class      <= INVALID_CLASS;
             error             <= 1'b0;
             node1_direction_q <= 1'b0;
+            node1_class_q     <= INVALID_CLASS;
             node2_class_q     <= INVALID_CLASS;
             node3_class_q     <= INVALID_CLASS;
             node2_next_q      <= INVALID_NODE;
@@ -176,6 +178,7 @@ module top_prefetch_un3_4state #(
 
                 S_COMPARE: begin
                     node1_direction_q <= node1_direction;
+                    node1_class_q     <= node1_class;
                     node2_class_q     <= node2_class;
                     node3_class_q     <= node3_class;
                     node2_next_q      <= node2_next;
@@ -184,7 +187,11 @@ module top_prefetch_un3_4state #(
                 end
 
                 S_DECISION: begin
-                    if (logic_class != INVALID_CLASS) begin
+                    if (node1_class_q != INVALID_CLASS) begin
+                        result_class <= node1_class_q;
+                        done         <= 1'b1;
+                        state        <= S_DONE;
+                    end else if (logic_class != INVALID_CLASS) begin
                         result_class <= logic_class;
                         done         <= 1'b1;
                         state        <= S_DONE;
