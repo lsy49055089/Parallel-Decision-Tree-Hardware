@@ -1,0 +1,21 @@
+name: Verilog CI
+
+on:
+  push:
+    paths:
+      - "parallel-decision-tree/**"
+      - ".github/workflows/verilog-ci.yml"
+  pull_request:
+    paths:
+      - "parallel-decision-tree/**"
+      - ".github/workflows/verilog-ci.yml"
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Icarus Verilog
+        run: sudo apt-get update && sudo apt-get install -y iverilog
+      - name: Run recovered and refined regression tests
+        run: bash parallel-decision-tree/scripts/run_iverilog.sh
