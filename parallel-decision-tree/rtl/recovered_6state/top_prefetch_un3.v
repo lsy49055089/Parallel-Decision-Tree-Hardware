@@ -76,6 +76,7 @@ module top_prefetch_un3 #(
     wire signed [(2*WORD_LEN)+ATTR_NUM_ENC:0] node3_score;
 
     reg node1_direction_q;
+    reg [CLASS_ENC-1:0] node1_class_q;
     reg [CLASS_ENC-1:0] node2_class_q;
     reg [CLASS_ENC-1:0] node3_class_q;
     reg [ND_NUM_ENC-1:0] node2_next_q;
@@ -178,6 +179,7 @@ module top_prefetch_un3 #(
             result_class      <= INVALID_CLASS;
             error             <= 1'b0;
             node1_direction_q <= 1'b0;
+            node1_class_q     <= INVALID_CLASS;
             node2_class_q     <= INVALID_CLASS;
             node3_class_q     <= INVALID_CLASS;
             node2_next_q      <= INVALID_NODE;
@@ -207,6 +209,7 @@ module top_prefetch_un3 #(
                 S_PREFETCH: begin
                     // REG stage: align all three UN results to one clock edge.
                     node1_direction_q <= node1_direction;
+                    node1_class_q     <= node1_class;
                     node2_class_q     <= node2_class;
                     node3_class_q     <= node3_class;
                     node2_next_q      <= node2_next;
@@ -215,7 +218,14 @@ module top_prefetch_un3 #(
                 end
 
                 S_DECIDE: begin
-                    if (logic_class != INVALID_CLASS) begin
+                    // A previous prefetch step can return a leaf address as
+                    // the next current node. In that case UN1 itself already
+                    // owns the final class and must take priority over UN2/3.
+                    if (node1_class_q != INVALID_CLASS) begin
+                        result_class <= node1_class_q;
+                        done         <= 1'b1;
+                        state        <= S_DONE;
+                    end else if (logic_class != INVALID_CLASS) begin
                         result_class <= logic_class;
                         done         <= 1'b1;
                         state        <= S_DONE;
