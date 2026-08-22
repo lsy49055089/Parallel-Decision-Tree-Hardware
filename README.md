@@ -9,7 +9,7 @@
 - **Venue:** 2025 한국스마트미디어학회 추계학술대회 논문
 - **Authors:** SeungYeol Lee, Chung-Soo Lim
 
-> 최종 논문은 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 명시합니다. 이 저장소는 복구 기록에서 확인된 6-state 개발 구현과 논문 명세에 맞춘 4-state 구현을 분리하고, 동일한 37개 벡터로 기능 동등성을 검증합니다. 원문으로 확인된 사실과 기능 재구성 항목은 [Recovery Notes](./parallel-decision-tree/docs/recovery-notes.md)에 구분했습니다.
+> 논문에서 제안한 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 RTL로 구현하고, 6-state 비교 구현과 동일한 37개 분류 결과를 유지하면서 제어 상태 통합에 따른 완료 사이클 변화를 검증했습니다.
 
 ## Research Contribution
 
@@ -23,8 +23,8 @@
 | Item | Control Flow | Role |
 |---|---|---|
 | Final paper specification | `LOAD → COMPARE → DECISION → DONE` | 논문에 명시된 4-state 구조 |
-| [Recovered 6-state](./parallel-decision-tree/rtl/recovered_6state/top_prefetch_un3.v) | `IDLE → LOAD → PREFETCH → DECIDE → DONE → ADVANCE` | 복구 기록과 과거 합성 로그를 바탕으로 재구성한 개발 구현 |
-| [Paper-aligned 4-state](./parallel-decision-tree/rtl/refined_4state/top_prefetch_un3_4state.v) | `LOAD → COMPARE → DECISION → DONE` | 논문 제어 흐름을 구현하고 제어 상태를 통합한 버전 |
+| [6-state baseline](./parallel-decision-tree/rtl/recovered_6state/top_prefetch_un3.v) | `IDLE → LOAD → PREFETCH → DECIDE → DONE → ADVANCE` | 상태 통합 전 비교 기준 구현 |
+| [4-state implementation](./parallel-decision-tree/rtl/refined_4state/top_prefetch_un3_4state.v) | `LOAD → COMPARE → DECISION → DONE` | 논문 제어 흐름에 맞춰 제어 상태를 통합한 구현 |
 
 두 RTL 버전은 공통 데이터패스를 사용하므로 FSM 변화가 분류 결과와 완료 사이클에 미치는 영향을 직접 비교할 수 있습니다.
 
@@ -32,13 +32,13 @@
 
 | Verification | Result |
 |---|---:|
-| Recovered 6-state classification | **37 / 37 PASS** |
-| Paper-aligned 4-state classification | **37 / 37 equivalent** |
-| Recovered batch completion cycles | **293 → 255** |
-| Recovered test-batch cycle reduction | **약 13.0%** |
+| 6-state baseline classification | **37 / 37 PASS** |
+| 4-state implementation | **37 / 37 equivalent** |
+| Batch completion cycles | **293 → 255** |
+| Cycle reduction | **약 13.0%** |
 | Regression | **GitHub Actions + Icarus Verilog** |
 
-`293 → 255`는 복구 RTL에 새로 구성한 37-vector regression 결과이며, 아래의 논문 Vivado 결과를 재현한 수치가 아닙니다.
+`293 → 255`는 저장소의 37-vector regression에서 측정한 배치 완료 사이클이며, 아래의 논문 Vivado 결과와는 별도의 검증 수치입니다.
 
 ## Architecture
 
@@ -78,7 +78,7 @@ flowchart TB
 
 ## Paper-Reported FPGA Results
 
-최종 논문이 보고한 Xilinx Artix-7 Vivado 합성 결과입니다. 새 복구 RTL의 재합성 결과로 주장하지 않습니다.
+최종 논문이 보고한 Xilinx Artix-7 Vivado 합성 결과입니다. 현재 저장소 구현을 새로 합성해 얻은 수치는 아닙니다.
 
 | Metric | Single UN | Parallel UN3 |
 |---|---:|---:|
@@ -103,8 +103,8 @@ flowchart TB
 parallel-decision-tree/
 ├── rtl/
 │   ├── common/              # I-Memory, address, decision unit, selection logic
-│   ├── recovered_6state/    # reconstructed development implementation
-│   └── refined_4state/      # paper-aligned FSM
+│   ├── recovered_6state/    # 6-state baseline controller
+│   └── refined_4state/      # 4-state controller
 ├── tb/                      # 37-vector and equivalence tests
 ├── scripts/                 # Icarus Verilog regression
 ├── docs/                    # paper reference and recovery evidence
@@ -119,24 +119,24 @@ bash parallel-decision-tree/scripts/run_iverilog.sh
 
 The regression performs:
 
-1. 37-vector classification with the recovered 6-state RTL
+1. 37-vector classification with the 6-state baseline RTL
 2. Expected-class comparison and DONE-state assertion
 3. 37-vector output equivalence between the 6-state and 4-state RTL
 4. Batch completion-cycle comparison
 
-## Recovery Scope
+## Verification Scope
 
-- **Paper-confirmed:** UN1–UN3 parallel structure, shared memories, four Logic cases, 4-state FSM, Artix-7 synthesis table
-- **Recovery-record-confirmed:** source filenames, parameters, 6-state development control flow and historical synthesis log
-- **Functionally reconstructed:** unavailable AD/A/C/I-Memory contents
-- **Newly verified:** 37-vector regression, 6-state/4-state equivalence, 293→255 batch-cycle reduction
-- **Not yet reproduced:** new Vivado synthesis and timing report for the recovered RTL
+- **Paper specification:** UN1–UN3 parallel structure, shared memories, four Logic cases, 4-state FSM, Artix-7 synthesis table
+- **Repository implementation:** shared datapath with separate 6-state and 4-state controllers
+- **Regression fixture:** deterministic AD/A/C/I-Memory tables and 37-vector test set for control-flow verification
+- **Verified in CI:** 37-vector regression, 6-state/4-state equivalence, 293→255 batch-cycle reduction
+- **Not yet reproduced:** current repository implementation의 Vivado synthesis 및 timing report
 
 ## Project Links
 
 - [Detailed Project README](./parallel-decision-tree/README.md)
 - [Paper Reference](./parallel-decision-tree/docs/paper-reference.md)
-- [Recovered 6-state RTL](./parallel-decision-tree/rtl/recovered_6state)
-- [Paper-aligned 4-state RTL](./parallel-decision-tree/rtl/refined_4state)
+- [6-state RTL](./parallel-decision-tree/rtl/recovered_6state)
+- [4-state RTL](./parallel-decision-tree/rtl/refined_4state)
 - [Testbenches](./parallel-decision-tree/tb)
-- [Recovery Notes](./parallel-decision-tree/docs/recovery-notes.md)
+- [Implementation Notes](./parallel-decision-tree/docs/recovery-notes.md)
