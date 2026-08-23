@@ -12,8 +12,8 @@
     <text x="70" y="80" class="k">CONTROLLER COMPARISON</text>
     <text x="70" y="124" class="h">Same Data Path, Consolidated Control States</text>
 
-    <text x="70" y="184" class="b">6-state baseline</text>
-    <text x="70" y="208" class="s">Repository baseline</text>
+    <text x="70" y="184" class="b">6-state development</text>
+    <text x="70" y="208" class="s">Baseline control flow</text>
     <g class="base">
       <rect x="382" y="159" width="148" height="64" rx="14"/><rect x="570" y="159" width="148" height="64" rx="14"/>
       <rect x="758" y="159" width="148" height="64" rx="14"/><rect x="946" y="159" width="148" height="64" rx="14"/>
