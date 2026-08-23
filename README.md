@@ -9,7 +9,7 @@
 - **Venue:** 2025 한국스마트미디어학회 추계학술대회 논문
 - **Authors:** SeungYeol Lee, Chung-Soo Lim
 
-> 논문에서 제안한 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 RTL로 구현하고, 6-state 비교 구현과 동일한 37개 분류 결과를 유지하면서 제어 상태 통합에 따른 완료 사이클 변화를 검증했습니다.
+> **Development path:** 개발 과정의 6-state 제어 흐름을 baseline으로 두고, `IDLE`과 `ADVANCE`의 역할을 기존 상태에 통합한 4-state 구현으로 개선했습니다. 최종 제출 논문은 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 명시하며, 현재 저장소의 4-state RTL은 이 논문 명세에 맞춰 구현되어 있습니다.
 
 ## Research Contribution
 
@@ -18,18 +18,20 @@
 - 자식이 node/leaf인 네 가지 조합을 Logic이 판별해 다음 주소 또는 class를 선택합니다.
 - 공유 I-Memory·AD-Memory와 동기 레지스터를 사용해 세 UN의 데이터 흐름을 정렬합니다.
 
-## Paper Specification and Repository Implementations
+## Development Path and Paper Implementation
 
-| Item | Control Flow | Role |
+| Stage | Control Flow | Role |
 |---|---|---|
-| Final paper specification | `LOAD → COMPARE → DECISION → DONE` | 논문에 명시된 4-state 구조 |
-| [6-state baseline](./parallel-decision-tree/rtl/recovered_6state/top_prefetch_un3.v) | `IDLE → LOAD → PREFETCH → DECIDE → DONE → ADVANCE` | 상태 통합 전 비교 기준 구현 |
-| [4-state implementation](./parallel-decision-tree/rtl/refined_4state/top_prefetch_un3_4state.v) | `LOAD → COMPARE → DECISION → DONE` | 논문 제어 흐름에 맞춰 제어 상태를 통합한 구현 |
+| [1. 6-state development baseline](./parallel-decision-tree/rtl/recovered_6state/top_prefetch_un3.v) | `IDLE → LOAD → PREFETCH → DECIDE → DONE → ADVANCE` | 개발 단계의 세분화된 제어 흐름을 현재 저장소에서 기능적으로 재구성한 기준 구현 |
+| [2. Refined 4-state implementation](./parallel-decision-tree/rtl/refined_4state/top_prefetch_un3_4state.v) | `LOAD → COMPARE → DECISION → DONE` | 대기와 다음 벡터 제어를 기존 상태에 통합한 개선 구현 |
+| 3. Submitted paper specification | `LOAD → COMPARE → DECISION → DONE` | 최종 제출 논문에 명시된 제어 흐름 |
 
-두 RTL 버전은 공통 데이터패스를 사용하므로 FSM 변화가 분류 결과와 완료 사이클에 미치는 영향을 직접 비교할 수 있습니다.
+두 버전은 I-Memory, AD-Memory, UN1–UN3, Logic으로 구성된 동일한 데이터패스를 공유합니다. 따라서 테스트에서는 FSM 변경이 분류 결과와 완료 사이클에 미치는 영향만 비교합니다.
+
+> **Source scope:** 제출 논문은 4-state 구조를 명시하지만 당시 소스 파일은 유실되었습니다. 현재 6-state 파일은 개발 기록을 바탕으로 구성한 baseline이고, 현재 4-state 파일은 논문 명세를 구현한 paper-aligned RTL입니다. 두 파일을 당시 원본 소스와 바이트 단위로 동일하다고 주장하지 않습니다.
 
 <p align="center">
-  <img src="./assets/fsm-comparison.svg" alt="6-state baseline and 4-state paper control-flow comparison" width="100%">
+  <img src="./assets/fsm-comparison.svg" alt="6-state development flow and 4-state paper control-flow comparison" width="100%">
 </p>
 
 
@@ -37,8 +39,8 @@
 
 | Verification | Result |
 |---|---:|
-| 6-state baseline classification | **37 / 37 PASS** |
-| 4-state implementation | **37 / 37 equivalent** |
+| 6-state development baseline | **37 / 37 PASS** |
+| 4-state paper-aligned implementation | **37 / 37 equivalent** |
 | Batch completion cycles | **293 → 255** |
 | Cycle reduction | **약 13.0%** |
 | Regression | **GitHub Actions + Icarus Verilog** |
@@ -105,11 +107,11 @@
 parallel-decision-tree/
 ├── rtl/
 │   ├── common/              # I-Memory, address, decision unit, selection logic
-│   ├── recovered_6state/    # 6-state baseline controller
-│   └── refined_4state/      # 4-state controller
+│   ├── recovered_6state/    # 6-state development baseline
+│   └── refined_4state/      # 4-state paper-aligned controller
 ├── tb/                      # 37-vector and equivalence tests
 ├── scripts/                 # Icarus Verilog regression
-├── docs/                    # paper reference and recovery evidence
+├── docs/                    # paper source and implementation basis
 └── README.md                # detailed technical documentation
 ```
 
@@ -121,7 +123,7 @@ bash parallel-decision-tree/scripts/run_iverilog.sh
 
 The regression performs:
 
-1. 37-vector classification with the 6-state baseline RTL
+1. 37-vector classification with the 6-state development baseline
 2. Expected-class comparison and DONE-state assertion
 3. 37-vector output equivalence between the 6-state and 4-state RTL
 4. Batch completion-cycle comparison
@@ -138,7 +140,7 @@ The regression performs:
 
 - [Detailed Project README](./parallel-decision-tree/README.md)
 - [Paper Reference](./parallel-decision-tree/docs/paper-reference.md)
-- [6-state RTL](./parallel-decision-tree/rtl/recovered_6state)
-- [4-state RTL](./parallel-decision-tree/rtl/refined_4state)
+- [6-state Development RTL](./parallel-decision-tree/rtl/recovered_6state)
+- [4-state Paper-Aligned RTL](./parallel-decision-tree/rtl/refined_4state)
 - [Testbenches](./parallel-decision-tree/tb)
-- [Implementation Notes](./parallel-decision-tree/docs/recovery-notes.md)
+- [Implementation Basis](./parallel-decision-tree/docs/recovery-notes.md)
