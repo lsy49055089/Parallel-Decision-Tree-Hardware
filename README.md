@@ -28,6 +28,11 @@
 
 두 RTL 버전은 공통 데이터패스를 사용하므로 FSM 변화가 분류 결과와 완료 사이클에 미치는 영향을 직접 비교할 수 있습니다.
 
+<p align="center">
+  <img src="./assets/fsm-comparison.svg" alt="6-state baseline and 4-state paper control-flow comparison" width="100%">
+</p>
+
+
 ## Repository Regression Results
 
 | Verification | Result |
@@ -42,30 +47,27 @@
 
 ## Architecture
 
-```mermaid
-flowchart TB
-    IM["I-Memory<br/>input vector"]
-    ADM["Shared AD-Memory<br/>current / left / right addresses"]
-    U1["UN1<br/>current node"]
-    U2["UN2<br/>left child"]
-    U3["UN3<br/>right child"]
-    LG["Logic<br/>4-case selection"]
-    OUT["Class output<br/>or next node"]
+<p align="center">
+  <img src="./assets/architecture-paper.svg" alt="Parallel Decision Tree paper-based architecture" width="100%">
+</p>
 
-    IM --> U1
-    IM --> U2
-    IM --> U3
-    ADM --> U1
-    ADM --> U2
-    ADM --> U3
-    U1 --> LG
-    U2 --> LG
-    U3 --> LG
-    LG --> OUT
-    OUT -. next address .-> ADM
-```
+위 구조도는 **제출 논문 그림 1과 발표자료 5페이지**를 기준으로, GitHub에서 데이터 흐름이 한눈에 보이도록 가로형으로 다시 구성했습니다.
 
-각 UN 내부는 A-Memory의 attribute/threshold, C-Memory의 child class 정보, 비교 연산부와 Decision 로직으로 구성됩니다.
+- I-Memory의 동일 입력 벡터와 AD-Memory의 노드 주소를 UN1·UN2·UN3이 공유합니다.
+- UN1은 현재 노드, UN2·UN3은 좌·우 자식 노드를 같은 구간에 계산합니다.
+- Logic은 네 가지 node/leaf 조합을 판별해 class 또는 next node를 선택합니다.
+- next node는 AD-Memory로 피드백되어 탐색을 반복합니다.
+
+각 UN 내부는 A-Memory의 attribute/threshold, C-Memory의 child class 정보, M2 비교 연산부와 Decision 로직으로 구성됩니다.
+
+<details>
+<summary><strong>제출 논문의 원본 그림과 결과표 보기</strong></summary>
+<br>
+<p align="center">
+  <img src="./assets/submitted-paper-figures.svg" alt="Submitted paper Figure 1 and FPGA result tables" width="100%">
+</p>
+<p>2025 한국스마트미디어학회 추계학술대회 제출 논문 2페이지의 그림 1, 표 2, 표 3 발췌본입니다. 위의 정리된 구조도와 아래 수치의 원본 근거로 사용했습니다.</p>
+</details>
 
 ## Four Logic Cases
 
