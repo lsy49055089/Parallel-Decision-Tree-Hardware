@@ -1,8 +1,10 @@
 # Parallel Decision Tree Hardware
 
-한 입력 벡터의 현재 노드(UN1)와 두 자식 노드(UN2, UN3)를 병렬 계산하는 FPGA 결정트리 분류기입니다. 2025 한국스마트미디어학회 추계학술대회 논문이 명시한 4-state 제어 흐름과 복구 기록에서 확인된 6-state 개발 구현을 분리하고, 두 버전의 분류 결과와 완료 사이클을 자동 검증합니다.
+한 입력 벡터의 현재 노드(UN1)와 두 자식 노드(UN2, UN3)를 병렬 계산하는 FPGA 결정트리 분류기입니다. 개발 과정의 6-state 제어 흐름과 상태를 통합한 4-state 구현을 분리하고, 동일한 데이터패스와 37개 입력 벡터로 기능 동등성과 완료 사이클을 비교합니다.
 
-> 이 저장소는 유실된 소스의 바이트 단위 원본이 아닙니다. 최종 논문, 포스터, 채팅 기록과 과거 합성 로그에서 확인된 구조를 기준으로 재구성한 검증 가능한 복구본입니다. 논문 근거는 [`docs/paper-reference.md`](docs/paper-reference.md), 확인 사실과 재구성 범위는 [`docs/recovery-notes.md`](docs/recovery-notes.md)에 기록했습니다.
+> **개발 흐름:** 6-state development baseline → 상태 통합 → 4-state paper-aligned implementation
+>
+> 최종 제출 논문은 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 명시합니다. 현재 4-state RTL은 이 논문 명세에 맞춰 구현한 코드입니다. 당시 소스 파일이 유실되었으므로 현재 파일을 제출 당시 원본과 바이트 단위로 동일하다고 주장하지 않으며, 구현 근거는 [`docs/paper-reference.md`](docs/paper-reference.md)와 [`docs/recovery-notes.md`](docs/recovery-notes.md)에 구분해 기록했습니다.
 
 ## 연구 아이디어
 
@@ -53,16 +55,16 @@ parallel-decision-tree/
     └── recovery-notes.md
 ```
 
-## FSM 비교
+## 개발 흐름과 FSM 비교
 
-최종 논문은 `001 LOAD → 010 COMPARE → 011 DECISION → 100 DONE`의 네 상태를 명시합니다.
+최종 제출 논문은 `001 LOAD → 010 COMPARE → 011 DECISION → 100 DONE`의 네 상태를 명시합니다.
 
-| 버전 | 상태 | 근거와 역할 |
+| 버전 | 상태 | 역할 |
 |---|---|---|
-| Recovered 6-state | `IDLE · LOAD · PREFETCH · DECIDE · DONE · ADVANCE` | 복구 기록과 과거 합성 로그에 남은 개발 구현을 기능 동등하게 재구성 |
-| Paper-aligned 4-state | `LOAD · COMPARE · DECISION · DONE` | 논문에 명시된 상태 흐름을 구현하고 대기·다음 벡터 제어를 통합 |
+| 6-state development baseline | `IDLE · LOAD · PREFETCH · DECIDE · DONE · ADVANCE` | 개발 단계에서 기능을 세분화한 제어 흐름 |
+| 4-state paper-aligned implementation | `LOAD · COMPARE · DECISION · DONE` | `IDLE`과 `ADVANCE`의 역할을 기존 상태에 통합한 개선 구현 |
 
-4-state 버전은 `active` 플래그로 LOAD 상태의 대기/실행 여부를 구분하며 별도의 숨은 FSM 상태를 사용하지 않습니다.
+4-state 버전은 `active` 플래그로 LOAD 상태의 대기/실행 여부를 구분하지만 별도의 숨은 FSM 상태는 사용하지 않습니다. 분류 데이터패스와 Logic은 두 버전이 동일합니다.
 
 ## 테스트
 
@@ -86,14 +88,14 @@ GitHub Actions에서도 같은 회귀 테스트를 자동 실행합니다.
 
 | Repository Regression | Result |
 |---|---:|
-| Recovered 6-state | 37 / 37 PASS |
-| Paper-aligned 4-state | 37 / 37 equivalent |
+| 6-state development baseline | 37 / 37 PASS |
+| 4-state paper-aligned implementation | 37 / 37 equivalent |
 | Batch completion | 293 → 255 cycles |
 | Cycle reduction | 약 13.0% |
 
 ## 논문에서 보고한 결과
 
-최종 논문의 Xilinx Artix-7 Vivado 결과이며, 복구 RTL을 새로 합성한 결과와 혼동하지 않습니다.
+최종 논문의 Xilinx Artix-7 Vivado 결과이며, 현재 저장소 RTL을 새로 합성한 결과와는 구분합니다.
 
 | 항목 | 단일 UN | 병렬 UN3 |
 |---|---:|---:|
@@ -116,9 +118,9 @@ GitHub Actions에서도 같은 회귀 테스트를 자동 실행합니다.
 |---|---|---|---|
 | 최종 논문 | Vivado, Xilinx Artix-7 | 13.10 ns, WNS > 0 | 논문 보고값 |
 | 과거 개발 로그 | Vivado 2023.2, `xc7a35tcpg236-1` | 10 ns target, WNS -3.083 ns | timing optimization 전 기록 |
-| 현재 복구 RTL | Icarus Verilog regression | functional simulation | Vivado 재합성 전 |
+| 현재 저장소 RTL | Icarus Verilog regression | functional simulation | Vivado 재합성 전 |
 
-서로 다른 수정 시점과 조건의 결과이므로 어느 수치도 현재 복구 RTL의 새 합성 결과로 바꾸어 주장하지 않습니다.
+서로 다른 수정 시점과 조건의 결과이므로 어느 수치도 현재 저장소 RTL의 새 합성 결과로 바꾸어 주장하지 않습니다.
 
 ## 향후 개선
 
