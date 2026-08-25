@@ -4,6 +4,8 @@
 
 한 입력 벡터의 현재 노드와 좌·우 자식 노드를 동시에 계산해 결정트리 탐색 시간을 줄이는 RTL 분류기입니다.
 
+**Portfolio focus:** RTL architecture · FSM refinement · equivalence verification
+
 - **Paper:** 병렬 구조 기반 결정트리 하드웨어 설계 및 분석
 - **English title:** Parallel Decision Tree Hardware Design and Analysis
 - **Venue:** 2025 한국스마트미디어학회 추계학술대회 논문
@@ -27,8 +29,6 @@
 | 3. Submitted paper specification | `LOAD → COMPARE → DECISION → DONE` | 최종 제출 논문에 명시된 제어 흐름 |
 
 두 버전은 I-Memory, AD-Memory, UN1–UN3, Logic으로 구성된 동일한 데이터패스를 공유합니다. 따라서 테스트에서는 FSM 변경이 분류 결과와 완료 사이클에 미치는 영향만 비교합니다.
-
-> **Source scope:** 제출 논문은 4-state 구조를 명시하지만 당시 소스 파일은 유실되었습니다. 현재 6-state 파일은 개발 기록을 바탕으로 구성한 baseline이고, 현재 4-state 파일은 논문 명세를 구현한 paper-aligned RTL입니다. 두 파일을 당시 원본 소스와 바이트 단위로 동일하다고 주장하지 않습니다.
 
 <p align="center">
   <img src="./assets/fsm-comparison.svg" alt="6-state development flow and 4-state paper control-flow comparison" width="100%">
@@ -136,6 +136,10 @@ The regression performs:
 - **Verified in CI:** 37-vector regression, 6-state/4-state equivalence, 293→255 batch-cycle reduction
 - **Not yet reproduced:** current repository implementation의 Vivado synthesis 및 timing report
 
+## Implementation Provenance
+
+최종 제출 논문은 4-state 구조를 명시하지만 당시 소스 파일은 유실되었습니다. 현재 6-state 파일은 개발 기록을 바탕으로 구성한 baseline이며, 현재 4-state 파일은 논문 명세를 구현한 paper-aligned RTL입니다. 두 구현을 제출 당시 원본과 바이트 단위로 동일하다고 주장하지 않으며, 확인된 논문 명세와 현재 구현의 근거는 문서에서 분리해 관리합니다.
+
 ## Project Links
 
 - [Detailed Project README](./parallel-decision-tree/README.md)
@@ -144,3 +148,10 @@ The regression performs:
 - [4-state Paper-Aligned RTL](./parallel-decision-tree/rtl/refined_4state)
 - [Testbenches](./parallel-decision-tree/tb)
 - [Implementation Basis](./parallel-decision-tree/docs/recovery-notes.md)
+
+
+---
+
+## Portfolio Navigation
+
+[Conference Paper](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware) · [RTL / FPGA Design](https://github.com/lsy49055089/RTL-Design-Projects) · [Design Verification](https://github.com/lsy49055089/RTL-Verification-Projects) · [Embedded Systems](https://github.com/lsy49055089/Embedded-Systems-Projects) · [Edge AI / CV](https://github.com/lsy49055089/AI-Projects)
