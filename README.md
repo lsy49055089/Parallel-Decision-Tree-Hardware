@@ -6,6 +6,8 @@
 
 **Portfolio focus:** RTL architecture · FSM refinement · equivalence verification
 
+[![Verilog CI](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware/actions/workflows/verilog-ci.yml/badge.svg)](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware/actions/workflows/verilog-ci.yml)
+
 - **Paper:** 병렬 구조 기반 결정트리 하드웨어 설계 및 분석
 - **English title:** Parallel Decision Tree Hardware Design and Analysis
 - **Venue:** 2025 한국스마트미디어학회 추계학술대회 논문
