@@ -4,7 +4,7 @@
 
 > **개발 흐름:** 6-state development baseline → 상태 통합 → 4-state paper-aligned implementation
 >
-> 최종 제출 논문은 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 명시합니다. 현재 4-state RTL은 이 논문 명세에 맞춰 구현한 코드입니다. 당시 소스 파일이 유실되었으므로 현재 파일을 제출 당시 원본과 바이트 단위로 동일하다고 주장하지 않으며, 구현 근거는 [`docs/paper-reference.md`](docs/paper-reference.md)와 [`docs/recovery-notes.md`](docs/recovery-notes.md)에 구분해 기록했습니다.
+> 최종 제출 논문은 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 명시하며, 현재 4-state RTL은 이 제어 흐름에 맞춰 구현했습니다.
 
 ## 연구 아이디어
 
@@ -112,6 +112,13 @@ GitHub Actions에서도 같은 회귀 테스트를 자동 실행합니다.
 | LV4 | 12 | 8 | 1.50× | 33.3% |
 | 논문 평균 | - | - | 1.37× | - |
 
+## 구현 범위와 출처
+
+제출 당시 전체 RTL 원본은 보존되지 않아 현재 저장소의 파일을 당시 원본과 바이트 단위로 동일하다고 주장하지 않습니다. 6-state는 개발 단계의 제어 흐름을 기준 구현으로 정리한 것이고, 4-state는 최종 논문에 명시된 FSM을 구현한 버전입니다.
+
+- [논문 명세와 수치](docs/paper-reference.md)
+- [현재 구현의 구성 근거](docs/recovery-notes.md)
+
 ## 합성 기록의 구분
 
 | Source | Tool / Target | Timing | Status |
@@ -127,3 +134,10 @@ GitHub Actions에서도 같은 회귀 테스트를 자동 실행합니다.
 - AD-Memory 주소 참조 구조를 개선해 논문의 4-cycle 탐색을 3-cycle로 단축
 - 4개 이상의 UN으로 병렬 폭 확장
 - Decision Tree Ensemble 또는 Random Forest 구조로 확장
+
+
+---
+
+## Portfolio Navigation
+
+[Conference Paper](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware) · [RTL / FPGA Design](https://github.com/lsy49055089/RTL-Design-Projects) · [Design Verification](https://github.com/lsy49055089/RTL-Verification-Projects) · [Embedded Systems](https://github.com/lsy49055089/Embedded-Systems-Projects) · [Edge AI / CV](https://github.com/lsy49055089/AI-Projects)
