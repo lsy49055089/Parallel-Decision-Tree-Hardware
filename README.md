@@ -26,7 +26,7 @@
 
 | Stage | Control Flow | Role |
 |---|---|---|
-| [1. 6-state development baseline](./parallel-decision-tree/rtl/recovered_6state/top_prefetch_un3.v) | `IDLE → LOAD → PREFETCH → DECIDE → DONE → ADVANCE` | 개발 단계의 세분화된 제어 흐름을 현재 저장소에서 기능적으로 재구성한 기준 구현 |
+| [1. 6-state development baseline](./parallel-decision-tree/rtl/recovered_6state/top_prefetch_un3.v) | `IDLE → LOAD → PREFETCH → DECIDE → DONE → ADVANCE` | 개발 단계의 세분화된 6-state 제어 기준 구현 |
 | [2. Refined 4-state implementation](./parallel-decision-tree/rtl/refined_4state/top_prefetch_un3_4state.v) | `LOAD → COMPARE → DECISION → DONE` | 대기와 다음 벡터 제어를 기존 상태에 통합한 개선 구현 |
 | 3. Submitted paper specification | `LOAD → COMPARE → DECISION → DONE` | 최종 제출 논문에 명시된 제어 흐름 |
 
@@ -47,7 +47,7 @@
 | Cycle reduction | **약 13.0%** |
 | Regression | **GitHub Actions + Icarus Verilog** |
 
-`293 → 255`는 저장소의 37-vector regression에서 측정한 배치 완료 사이클이며, 아래의 논문 Vivado 결과와는 별도의 검증 수치입니다.
+**측정 조건:** 동일 데이터패스 · 37개 입력 벡터 · 6-state/4-state FSM · Icarus Verilog.
 
 ## Architecture
 
@@ -55,7 +55,7 @@
   <img src="./assets/architecture-paper.svg" alt="Parallel Decision Tree paper-based architecture" width="100%">
 </p>
 
-위 구조도는 **제출 논문 그림 1과 발표자료 5페이지**를 기준으로, GitHub에서 데이터 흐름이 한눈에 보이도록 가로형으로 다시 구성했습니다.
+**공유 메모리 → UN1·UN2·UN3 병렬 비교 → Logic 선택 → 다음 노드 피드백**으로 이어지는 데이터 흐름입니다.
 
 - I-Memory의 동일 입력 벡터와 AD-Memory의 노드 주소를 UN1·UN2·UN3이 공유합니다.
 - UN1은 현재 노드, UN2·UN3은 좌·우 자식 노드를 같은 구간에 계산합니다.
@@ -84,7 +84,7 @@
 
 ## Paper-Reported FPGA Results
 
-최종 논문이 보고한 Xilinx Artix-7 Vivado 합성 결과입니다. 현재 저장소 구현을 새로 합성해 얻은 수치는 아닙니다.
+**결과 출처:** 2025 학술대회 논문 · Xilinx Artix-7 · Vivado · 순차 UN1/병렬 UN3 비교.
 
 | Metric | Single UN | Parallel UN3 |
 |---|---:|---:|
@@ -132,15 +132,15 @@ The regression performs:
 
 ## Verification Scope
 
-- **Paper specification:** UN1–UN3 parallel structure, shared memories, four Logic cases, 4-state FSM, Artix-7 synthesis table
-- **Repository implementation:** shared datapath with separate 6-state and 4-state controllers
-- **Regression fixture:** deterministic AD/A/C/I-Memory tables and 37-vector test set for control-flow verification
-- **Verified in CI:** 37-vector regression, 6-state/4-state equivalence, 293→255 batch-cycle reduction
-- **Not yet reproduced:** current repository implementation의 Vivado synthesis 및 timing report
+| 결과 | 실험 조건 | 근거 |
+|---|---|---|
+| 논문 합성·병렬화 성능 | Vivado · Artix-7 · 순차 UN1 / 병렬 UN3 | 최종 학술대회 논문 |
+| RTL 회귀 테스트 | Icarus Verilog · 37개 벡터 · 동일 데이터패스의 6-state / 4-state FSM | 저장소 자동 테스트 |
+| 분류 데이터 | 결정적 AD/A/C/I-Memory 테이블 · 9개 leaf 경로 | 제어 흐름 검증용 회귀 데이터 |
 
-## Implementation Provenance
+## Implementation Basis
 
-최종 제출 논문은 4-state 구조를 명시하지만 당시 소스 파일은 유실되었습니다. 현재 6-state 파일은 개발 기록을 바탕으로 구성한 baseline이며, 현재 4-state 파일은 논문 명세를 구현한 paper-aligned RTL입니다. 두 구현을 제출 당시 원본과 바이트 단위로 동일하다고 주장하지 않으며, 확인된 논문 명세와 현재 구현의 근거는 문서에서 분리해 관리합니다.
+공개 RTL의 구현 근거는 개발 기록과 최종 논문 명세입니다. [구현 내역과 회귀 데이터](./parallel-decision-tree/docs/recovery-notes.md) · [논문 실험 조건](./parallel-decision-tree/docs/paper-reference.md)
 
 ## Project Links
 
