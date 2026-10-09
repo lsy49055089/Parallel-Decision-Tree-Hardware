@@ -95,7 +95,7 @@ GitHub Actions에서도 같은 회귀 테스트를 자동 실행합니다.
 
 ## 논문에서 보고한 결과
 
-최종 논문의 Xilinx Artix-7 Vivado 결과이며, 현재 저장소 RTL을 새로 합성한 결과와는 구분합니다.
+**결과 출처:** 2025 학술대회 논문 · Xilinx Artix-7 · Vivado · 순차 UN1/병렬 UN3 비교.
 
 | 항목 | 단일 UN | 병렬 UN3 |
 |---|---:|---:|
@@ -114,7 +114,7 @@ GitHub Actions에서도 같은 회귀 테스트를 자동 실행합니다.
 
 ## 구현 범위와 출처
 
-제출 당시 전체 RTL 원본은 보존되지 않아 현재 저장소의 파일을 당시 원본과 바이트 단위로 동일하다고 주장하지 않습니다. 6-state는 개발 단계의 제어 흐름을 기준 구현으로 정리한 것이고, 4-state는 최종 논문에 명시된 FSM을 구현한 버전입니다.
+공개 RTL의 구현 근거는 개발 기록과 최종 논문 명세입니다. 6-state 제어 기준 구현과 논문의 4-state FSM 구현은 공통 데이터패스를 사용합니다.
 
 - [논문 명세와 수치](docs/paper-reference.md)
 - [현재 구현의 구성 근거](docs/recovery-notes.md)
@@ -127,7 +127,6 @@ GitHub Actions에서도 같은 회귀 테스트를 자동 실행합니다.
 | 과거 개발 로그 | Vivado 2023.2, `xc7a35tcpg236-1` | 10 ns target, WNS -3.083 ns | timing optimization 전 기록 |
 | 현재 저장소 RTL | Icarus Verilog regression | functional simulation | Vivado 재합성 전 |
 
-서로 다른 수정 시점과 조건의 결과이므로 어느 수치도 현재 저장소 RTL의 새 합성 결과로 바꾸어 주장하지 않습니다.
 
 ## 향후 개선
 
