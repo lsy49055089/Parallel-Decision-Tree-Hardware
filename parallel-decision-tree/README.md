@@ -6,6 +6,14 @@
 >
 > 최종 제출 논문은 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 명시하며, 현재 4-state RTL은 이 제어 흐름에 맞춰 구현했습니다.
 
+## 학술대회 발표
+
+**2025 한국스마트미디어학회 추계학술대회 · 2025.11.15 · 포스터 P2-14 · 제1저자 발표**
+
+<p align="center">
+  <img src="../assets/decision-tree-conference-program.png" alt="2025 추계학술대회 발표 프로그램의 일시·장소와 P2-14 논문 제목·저자" width="900">
+</p>
+
 ## 연구 아이디어
 
 기존 batch-parallel 결정트리 하드웨어가 여러 입력 벡터를 병렬 처리하는 것과 달리, 이 설계는 **한 입력 벡터가 통과하는 노드 탐색 자체를 병렬화**합니다.

@@ -13,6 +13,14 @@
 - **Venue:** 2025 한국스마트미디어학회 추계학술대회 논문
 - **Authors:** SeungYeol Lee, Chung-Soo Lim
 
+## Conference Presentation
+
+**2025 한국스마트미디어학회 추계학술대회 · 2025.11.15 · 포스터 P2-14 · 제1저자 발표**
+
+<p align="center">
+  <img src="./assets/decision-tree-conference-program.png" alt="2025 추계학술대회 발표 프로그램의 일시·장소와 P2-14 논문 제목·저자" width="900">
+</p>
+
 > **Development path:** 개발 과정의 6-state 제어 흐름을 baseline으로 두고, `IDLE`과 `ADVANCE`의 역할을 기존 상태에 통합한 4-state 구현으로 개선했습니다. 최종 제출 논문은 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 명시하며, 현재 저장소의 4-state RTL은 이 논문 명세에 맞춰 구현되어 있습니다.
 
 ## Research Contribution
