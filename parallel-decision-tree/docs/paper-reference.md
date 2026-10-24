@@ -33,7 +33,7 @@ Each Universal Node includes attribute/threshold storage, child-class informatio
 001 LOAD → 010 COMPARE → 011 DECISION → 100 DONE
 ```
 
-The final paper and poster both present this four-state flow. The repository's `refined_4state` implementation follows this specification. The separately preserved `recovered_6state` implementation is identified as a development/recovery version, not as the paper-specified FSM.
+The final paper and poster both present this four-state flow. The repository's `refined_4state` implementation follows this specification. Both the six-state and four-state controllers were designed by SeungYeol Lee. The paper describes the four-state flow; the repository retains both controllers for functional comparison.
 
 ## Four Logic Cases
 

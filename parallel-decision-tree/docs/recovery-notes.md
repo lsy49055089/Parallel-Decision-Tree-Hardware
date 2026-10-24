@@ -2,7 +2,7 @@
 
 ## 복구 원칙
 
-1. 복구 기록과 과거 합성 로그에서 확인되는 6-state 개발 구현은 `recovered_6state`에 보존합니다.
+1. 복구 기록과 과거 합성 로그에서 확인되는 6-state FSM 구현은 `recovered_6state`에 보존합니다.
 2. 최종 학술대회 논문이 명시한 4-state FSM은 `refined_4state`에 구현합니다.
 3. 두 버전은 공통 데이터패스를 사용하되 제어 흐름과 결과 출처를 섞지 않습니다.
 4. 원문 전체 소스가 확인되지 않은 값은 원본 복구로 꾸미지 않고 기능 재구성 항목으로 표시합니다.
@@ -55,7 +55,7 @@
 - 테스트 트리의 내부 노드는 `0,1,2,3,5,6,7,12`입니다.
 - 과거 Vivado 합성 기록에는 `Controller.state`가 six-state one-hot으로 인코딩된 로그가 있습니다.
 
-따라서 이 저장소는 6-state를 논문의 명시된 FSM이라고 부르지 않습니다. 6-state는 복구 근거에 남은 개발 구현, 4-state는 최종 논문 명세를 반영한 구현으로 구분합니다.
+6-state와 4-state는 모두 본인이 설계한 FSM입니다. 최종 논문에는 4-state 제어 흐름이 기재되어 있으며, 저장소에서는 두 구현의 기능 동등성과 완료 사이클을 확인합니다.
 
 ## 기능 동등 복구로 재구성한 내용
 
@@ -73,13 +73,13 @@
 
 ## 상태별 완료 기준
 
-### Recovered 6-state
+### 6-state FSM
 
 `done`은 DECIDE에서 class가 확정되는 상승 에지에 설정되며, 출력 파형상 `state=100 (DONE)`인 한 클록 동안 유효합니다. `101 (ADVANCE)`은 결과 계산 시간이 아니라 다음 벡터 준비/배치 종료 상태입니다.
 
-### Paper-aligned 4-state
+### 4-state FSM
 
-`done`은 DECISION에서 class가 확정되는 상승 에지에 설정되며, `state=100 (DONE)` 동안 유효합니다. 다음 벡터 진행과 종료 판정을 DONE에 통합하여 별도 ADVANCE 상태를 제거했습니다.
+`done`은 DECISION에서 class가 확정되는 상승 에지에 설정되며, `state=100 (DONE)` 동안 유효합니다. 다음 벡터 진행과 종료 판정은 DONE에서 처리합니다.
 
 ## 결과 출처 구분
 
@@ -87,6 +87,6 @@
 |---|---:|---:|---|---|
 | 과거 Vivado post-synthesis 로그 | 3,120 | 2,526 | 10 ns target, WNS -3.083 ns | 개발 중간 기록 |
 | 최종 논문 표 | 2,884 | 2,516 | 13.10 ns, WNS > 0 | 병렬 UN3 논문 보고값 |
-| 현재 repository regression | - | - | 293→255 batch cycles | 복구 RTL의 기능·cycle 비교 |
+| 현재 repository regression | - | - | 6-state 293 / 4-state 255 batch cycles | 복구 RTL의 기능·cycle 비교 |
 
 세 결과는 수정 시점, 입력과 검증 도구가 다르므로 직접적인 재현 관계를 주장하지 않습니다.

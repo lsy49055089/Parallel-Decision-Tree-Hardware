@@ -1,8 +1,8 @@
 # Parallel Decision Tree Hardware
 
-한 입력 벡터의 현재 노드(UN1)와 두 자식 노드(UN2, UN3)를 병렬 계산하는 FPGA 결정트리 분류기입니다. 개발 과정의 6-state 제어 흐름과 상태를 통합한 4-state 구현을 분리하고, 동일한 데이터패스와 37개 입력 벡터로 기능 동등성과 완료 사이클을 비교합니다.
+한 입력 벡터의 현재 노드(UN1)와 두 자식 노드(UN2, UN3)를 병렬 계산하는 FPGA 결정트리 분류기입니다. 3-UN 병렬 Datapath와 6-state·4-state 탐색 제어 FSM을 모두 직접 설계했습니다. 동일한 데이터패스와 37개 입력 벡터로 두 구현의 기능 동등성과 완료 사이클을 확인합니다.
 
-> **개발 흐름:** 6-state development baseline → 상태 통합 → 4-state paper-aligned implementation
+> **설계 범위:** 병렬 Datapath · 탐색 제어 FSM · Node/Leaf 선택 Logic · RTL 검증
 >
 > 최종 제출 논문은 `LOAD → COMPARE → DECISION → DONE`의 4-state FSM을 명시하며, 현재 4-state RTL은 이 제어 흐름에 맞춰 구현했습니다.
 
@@ -63,14 +63,14 @@ parallel-decision-tree/
     └── recovery-notes.md
 ```
 
-## 개발 흐름과 FSM 비교
+## 탐색 제어 FSM 설계
 
 최종 제출 논문은 `001 LOAD → 010 COMPARE → 011 DECISION → 100 DONE`의 네 상태를 명시합니다.
 
 | 버전 | 상태 | 역할 |
 |---|---|---|
-| 6-state development baseline | `IDLE · LOAD · PREFETCH · DECIDE · DONE · ADVANCE` | 개발 단계에서 기능을 세분화한 제어 흐름 |
-| 4-state paper-aligned implementation | `LOAD · COMPARE · DECISION · DONE` | `IDLE`과 `ADVANCE`의 역할을 기존 상태에 통합한 개선 구현 |
+| 6-state FSM | `IDLE · LOAD · PREFETCH · DECIDE · DONE · ADVANCE` | 직접 설계한 6-state 탐색 제어 |
+| 4-state FSM | `LOAD · COMPARE · DECISION · DONE` | 직접 설계한 4-state 탐색 제어 · 논문에 기재 |
 
 4-state 버전은 `active` 플래그로 LOAD 상태의 대기/실행 여부를 구분하지만 별도의 숨은 FSM 상태는 사용하지 않습니다. 분류 데이터패스와 Logic은 두 버전이 동일합니다.
 
@@ -90,16 +90,16 @@ bash parallel-decision-tree/scripts/run_iverilog.sh
    - `done`이 반드시 `state=100`에서만 발생하는지 확인
 2. `tb_refined_4state_equivalence`
    - 6-state와 4-state의 37개 결과 전수 비교
-   - 4-state 배치 완료 사이클이 6-state보다 감소했는지 확인
+   - 두 FSM의 분류 결과와 배치 완료 사이클 확인
 
 GitHub Actions에서도 같은 회귀 테스트를 자동 실행합니다.
 
 | Repository Regression | Result |
 |---|---:|
-| 6-state development baseline | 37 / 37 PASS |
-| 4-state paper-aligned implementation | 37 / 37 equivalent |
-| Batch completion | 293 → 255 cycles |
-| Cycle reduction | 약 13.0% |
+| 6-state FSM | 37 / 37 PASS |
+| 4-state FSM | 37 / 37 equivalent |
+| 6-state batch completion | 293 cycles |
+| 4-state batch completion | 255 cycles |
 
 ## 논문에서 보고한 결과
 
@@ -122,7 +122,7 @@ GitHub Actions에서도 같은 회귀 테스트를 자동 실행합니다.
 
 ## 구현 범위와 출처
 
-공개 RTL의 구현 근거는 개발 기록과 최종 논문 명세입니다. 6-state 제어 기준 구현과 논문의 4-state FSM 구현은 공통 데이터패스를 사용합니다.
+공개 RTL의 구현 근거는 개발 기록과 최종 논문 명세입니다. 직접 설계한 6-state·4-state FSM은 공통 데이터패스를 사용하며, 최종 논문에는 4-state 제어 흐름을 기재했습니다.
 
 - [논문 명세와 수치](docs/paper-reference.md)
 - [현재 구현의 구성 근거](docs/recovery-notes.md)

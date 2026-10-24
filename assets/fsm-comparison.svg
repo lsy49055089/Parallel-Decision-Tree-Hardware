@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="520" viewBox="0 0 1600 520" role="img" aria-labelledby="title desc">
   <title id="title">6-state and 4-state controller comparison</title>
-  <desc id="desc">The repository compares a six-state baseline controller with the four-state control flow stated in the submitted paper.</desc>
+  <desc id="desc">Both FSMs were designed by SeungYeol Lee. The two controllers share the same datapath; the submitted paper describes the four-state flow.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8fbff"/><stop offset="1" stop-color="#eef6ff"/></linearGradient>
     <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7390aa"/></marker>
@@ -10,10 +10,10 @@
   <rect x="28" y="28" width="1544" height="464" rx="24" fill="none" stroke="#c7dced" stroke-width="2"/>
   <g class="t">
     <text x="70" y="80" class="k">CONTROLLER COMPARISON</text>
-    <text x="70" y="124" class="h">Same Data Path, Consolidated Control States</text>
+    <text x="70" y="124" class="h">Two FSMs, Shared Datapath</text>
 
-    <text x="70" y="184" class="b">6-state development</text>
-    <text x="70" y="208" class="s">Baseline control flow</text>
+    <text x="70" y="184" class="b">6-state FSM</text>
+    <text x="70" y="208" class="s">Designed by SeungYeol Lee</text>
     <g class="base">
       <rect x="382" y="159" width="148" height="64" rx="14"/><rect x="570" y="159" width="148" height="64" rx="14"/>
       <rect x="758" y="159" width="148" height="64" rx="14"/><rect x="946" y="159" width="148" height="64" rx="14"/>
@@ -27,9 +27,9 @@
 
     <line x1="70" y1="267" x2="1530" y2="267" stroke="#c9dbea" stroke-width="2"/>
 
-    <text x="70" y="329" class="b">4-state implementation</text>
-    <text x="70" y="353" class="s">Paper control flow</text>
-    <g class="paper">
+    <text x="70" y="329" class="b">4-state FSM</text>
+    <text x="70" y="353" class="s">Designed by SeungYeol Lee</text>
+    <g class="base">
       <rect x="542" y="304" width="188" height="70" rx="16"/><rect x="794" y="304" width="188" height="70" rx="16"/>
       <rect x="1046" y="304" width="188" height="70" rx="16"/><rect x="1298" y="304" width="188" height="70" rx="16"/>
     </g>
@@ -39,6 +39,6 @@
     <g class="line"><line x1="730" y1="339" x2="794" y2="339"/><line x1="982" y1="339" x2="1046" y2="339"/><line x1="1234" y1="339" x2="1298" y2="339"/></g>
 
     <rect x="70" y="417" width="1460" height="50" rx="15" fill="#0f5f99"/>
-    <text x="800" y="449" text-anchor="middle" fill="#fff" font-size="19" font-weight="750">37 / 37 outputs equivalent · 293 → 255 batch cycles in repository regression</text>
+    <text x="800" y="449" text-anchor="middle" fill="#fff" font-size="19" font-weight="750">37 / 37 outputs equivalent · 6-state: 293 cycles / 4-state: 255 cycles</text>
   </g>
 </svg>
