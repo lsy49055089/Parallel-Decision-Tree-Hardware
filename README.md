@@ -4,7 +4,7 @@
 
 한 입력 벡터의 현재 노드와 좌·우 자식 노드를 동시에 계산해 결정트리 탐색 시간을 줄이는 RTL 분류기입니다.
 
-**Portfolio focus:** Parallel datapath · traversal-control FSM design · equivalence verification
+**핵심 설계:** 병렬 Datapath · 탐색 제어 FSM · 분류 결과 동등성 검증
 
 [![Verilog CI](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware/actions/workflows/verilog-ci.yml/badge.svg)](https://github.com/lsy49055089/Parallel-Decision-Tree-Hardware/actions/workflows/verilog-ci.yml)
 
@@ -66,7 +66,7 @@
 <p align="center">
   <img src="./assets/submitted-paper-figures.svg" alt="Submitted paper Figure 1 and FPGA result tables" width="100%">
 </p>
-<p>2025 한국스마트미디어학회 추계학술대회 제출 논문 2페이지의 그림 1, 표 2, 표 3 발췌본입니다. 위의 정리된 구조도와 아래 수치의 원본 근거로 사용했습니다.</p>
+<p>2025 한국스마트미디어학회 추계학술대회 제출 논문 2페이지의 그림 1, 표 2, 표 3 발췌본입니다. 병렬 구조와 합성·성능 결과를 확인할 수 있습니다.</p>
 </details>
 
 ## Four Logic Cases
@@ -127,7 +127,7 @@ The regression performs:
 4. Batch completion-cycle comparison
 
 <details>
-<summary><strong>두 FSM의 37개 벡터 회귀 검증 상세</strong></summary>
+<summary><strong>두 FSM의 37개 입력 벡터 검증</strong></summary>
 
 6-state와 4-state는 모두 직접 설계한 제어 구현입니다. 동일한 Datapath와 입력으로 기능 동등성과 각 구현의 완료 사이클을 확인했습니다.
 
@@ -151,9 +151,9 @@ The regression performs:
 | RTL 회귀 테스트 | Icarus Verilog · 37개 벡터 · 동일 데이터패스의 6-state / 4-state FSM | 저장소 자동 테스트 |
 | 분류 데이터 | 결정적 AD/A/C/I-Memory 테이블 · 9개 leaf 경로 | 제어 흐름 검증용 회귀 데이터 |
 
-## Implementation Basis
+## RTL 설계·검증 자료
 
-공개 RTL의 구현 근거는 개발 기록과 최종 논문 명세입니다. [구현 내역과 회귀 데이터](./parallel-decision-tree/docs/recovery-notes.md) · [논문 실험 조건](./parallel-decision-tree/docs/paper-reference.md)
+RTL 구조와 입력 벡터 구성은 [설계·검증 자료](./parallel-decision-tree/docs/recovery-notes.md), 논문의 클록·비교 구조는 [실험 조건](./parallel-decision-tree/docs/paper-reference.md)에서 확인할 수 있습니다.
 
 ## Project Links
 
@@ -162,7 +162,7 @@ The regression performs:
 - [6-state RTL](./parallel-decision-tree/rtl/recovered_6state)
 - [4-state RTL](./parallel-decision-tree/rtl/refined_4state)
 - [Testbenches](./parallel-decision-tree/tb)
-- [Implementation Basis](./parallel-decision-tree/docs/recovery-notes.md)
+- [RTL 설계·검증 자료](./parallel-decision-tree/docs/recovery-notes.md)
 
 
 ---
