@@ -1,9 +1,17 @@
-# Parallel Decision Tree Hardware
+<a id="parallel-decision-tree-hardware"></a>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./assets/readme/header-dark.svg">
+  <img src="./assets/readme/header-light.svg" width="100%" alt="Parallel Decision Tree">
+</picture>
 
 한 입력 벡터의 현재 노드와 좌·우 자식 노드를 병렬 계산하는 FPGA 결정트리 분류기입니다.
 
 
 <a id="portfolio-navigation"></a>
+
+
+[개요](#개요) · [담당 역할](#담당-역할) · [설계·구현](#설계구현) · [검증 결과](#검증-결과) · [실행 방법](#실행-방법)
 
 ## 개요
 
